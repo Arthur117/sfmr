@@ -989,7 +989,7 @@ def prepare_sfmr(sfmr_file, track_df, acq_time):
     sfmr_resample_freq_sec = 10
     sfmr_df = sfmr_resample(sfmr_df, sfmr_resample_freq_sec, sfmr_lon, excluded_resample)
 
-    sfmr_downsample_dist = 0.25
+    sfmr_downsample_dist = 0.03
     # Spatially downsample SFMR data
     sfmr_df = spatial_downsample(sfmr_df, sfmr_lat, sfmr_lon, sfmr_time, sfmr_downsample_dist, sfmr_source)
 
