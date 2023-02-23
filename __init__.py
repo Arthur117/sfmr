@@ -965,16 +965,15 @@ def prepare_sfmr(sfmr_file, track_df, acq_time):
     logger.info(f"{sfmr_file}")
 
     # Open SFMR track file with xarray
-    sfmr_ds = xr.open_dataset(sfmr_file)
-
+    sfmr_ds     = xr.open_dataset(sfmr_file)
+    # HRD or NESDIS
     sfmr_source = sfmr_data_source(sfmr_ds)
 
     # SFMR column names to use
-    sfmr_lon = sfmr_sources_variables[sfmr_source]["lon"]
-    sfmr_lat = sfmr_sources_variables[sfmr_source]["lat"]
-    sfmr_time = sfmr_sources_variables[sfmr_source]["time"]
-    
-    sfmr_wind = sfmr_sources_variables[sfmr_source]["wind_speed"]
+    sfmr_lon     = sfmr_sources_variables[sfmr_source]["lon"]
+    sfmr_lat     = sfmr_sources_variables[sfmr_source]["lat"]
+    sfmr_time    = sfmr_sources_variables[sfmr_source]["time"]
+    sfmr_wind    = sfmr_sources_variables[sfmr_source]["wind_speed"]
     sfmr_quality = sfmr_sources_variables[sfmr_source]["quality"]
 
     # Converting to pandas dataframe
@@ -987,13 +986,14 @@ def prepare_sfmr(sfmr_file, track_df, acq_time):
     excluded_resample = [sfmr_var_mapping_reversed[sfmr_source][v] for v in sfmr_time_resample_excluded]
     # Temporally downsample SFMR data
     sfmr_resample_freq_sec = 10
-    sfmr_df = sfmr_resample(sfmr_df, sfmr_resample_freq_sec, sfmr_lon, excluded_resample)
+    sfmr_df                = sfmr_resample(sfmr_df, sfmr_resample_freq_sec, sfmr_lon, excluded_resample)
 
-    sfmr_downsample_dist = 0.03
     # Spatially downsample SFMR data
-    sfmr_df = spatial_downsample(sfmr_df, sfmr_lat, sfmr_lon, sfmr_time, sfmr_downsample_dist, sfmr_source)
+    sfmr_downsample_dist = 0.03
+    sfmr_df              = spatial_downsample(sfmr_df, sfmr_lat, sfmr_lon, sfmr_time, sfmr_downsample_dist, sfmr_source)
 
     sfmr_df_trans = sfmr_translate(sfmr_df, track_df, acq_time, sfmr_lon, sfmr_lat, sfmr_time)
+    
 
     # A voir si tu en as besoin, c'est pour changer SFMR de projection spatiale
     # sfmr_df_trans = sfmr_transform(sfmr_df_trans, source_crs="EPSG:4326", target_crs=sat_ds.rio.crs,
